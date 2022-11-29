@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:rolebase_app/home.dart';
 import 'package:rolebase_app/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,10 +17,24 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Timer(const Duration(seconds: 3), (() {
-      Navigator.push(context,
-          MaterialPageRoute(builder: ((context) => const LoginScreen())));
-    }));
+    isLogin();
+  }
+
+  void isLogin() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    bool login = sharedPreferences.getBool('isLogin') ?? false;
+    if (login) {
+      Timer(const Duration(seconds: 3), (() {
+        Navigator.push(
+            context, MaterialPageRoute(builder: ((context) => const Home())));
+      }));
+    } else {
+      Timer(const Duration(seconds: 3), (() {
+        Navigator.push(context,
+            MaterialPageRoute(builder: ((context) => const LoginScreen())));
+      }));
+    }
   }
 
   @override
